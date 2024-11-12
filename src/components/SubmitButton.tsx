@@ -2,13 +2,11 @@
 
 import { useFormStatus } from 'react-dom';
 import { LoaderCircle } from 'lucide-react';
-import Form from 'next/form';
 
 import { Button } from '@/components/ui/button';
 
 export const SubmitButton = () => {
   const { pending } = useFormStatus();
-  console.log('pending: ', pending);
 
   return (
     <Button className='relative w-full font-semibold'>
