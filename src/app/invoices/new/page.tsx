@@ -3,9 +3,9 @@
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { SubmitButton } from '@/components/SubmitButton';
 import { createAction } from '@/app/actions';
+import Form from 'next/form';
 
 import { SyntheticEvent, useState } from 'react';
 
@@ -13,11 +13,13 @@ const Invoices = () => {
   const [pending, setPending] = useState<boolean>();
 
   const handleSubmit = async (event: SyntheticEvent) => {
-    event.preventDefault();
     const target = event.target as HTMLFormElement;
     const formData = new FormData(target);
     await createAction(formData);
-    if (pending) return;
+    if (pending) {
+      event.preventDefault();
+      return;
+    }
     setPending(true);
   };
 
@@ -28,7 +30,7 @@ const Invoices = () => {
           Create Invoice
         </h1>
       </div>
-      <form
+      <Form
         action={createAction}
         onSubmit={handleSubmit}
         className='grid gap-4 max-w-xs border border-blue-500'
@@ -63,7 +65,7 @@ const Invoices = () => {
         <div>
           <SubmitButton />
         </div>
-      </form>
+      </Form>
     </main>
   );
 };
