@@ -11,31 +11,26 @@ import { SyntheticEvent, useState } from 'react';
 import Container from '@/components/Container';
 
 const Invoices = () => {
-  const [pending, setPending] = useState<boolean>();
+  const [state, setState] = useState<string>('ready');
 
   const handleSubmit = async (event: SyntheticEvent) => {
-    const target = event.target as HTMLFormElement;
-    const formData = new FormData(target);
-    await createAction(formData);
-    if (pending) {
+    if (state === 'pending') {
       event.preventDefault();
       return;
     }
-    setPending(true);
+    setState('pending');
   };
 
   return (
     <main className='gap-6 '>
       <Container>
         <div className='flex justify-between'>
-          <h1 className='mb-6 text-3xl font-bold border border-red-500 text-left'>
-            Create Invoice
-          </h1>
+          <h1 className='mb-6 text-3xl font-bold text-left'>Create Invoice</h1>
         </div>
         <Form
           action={createAction}
           onSubmit={handleSubmit}
-          className='grid gap-4 max-w-xs border border-blue-500'
+          className='grid gap-4 max-w-xs'
         >
           <div>
             <Label htmlFor='name' className='block mb-2 font-semibold text-sm'>
