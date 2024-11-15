@@ -1,5 +1,6 @@
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
+import { auth } from '@clerk/nextjs/server';
 
 import { Invoices } from '@/db/schema';
 import { db } from '@/db';
@@ -13,16 +14,20 @@ export default async function InvoicePage({
 }) {
   // const invoiceData = await db.select().from(Invoices);
 
+  const { userId } = await auth();
+
   const invoiceId = parseInt(params.invoiceId);
 
   if (isNaN(invoiceId)) {
     throw new Error('Invalid Invoice ID');
   }
 
+  if (!userId) return;
+
   const [invoice] = await db
     .select()
     .from(Invoices)
-    .where(eq(Invoices.id, invoiceId))
+    .where(and(eq(Invoices.id, invoiceId), eq(Invoices.userId, userId)))
     .limit(1);
 
   // console.log('invoiceDetails: ', invoice);
