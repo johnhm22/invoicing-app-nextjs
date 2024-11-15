@@ -25,16 +25,16 @@ export default async function InvoicePage({
     .where(eq(Invoices.id, invoiceId))
     .limit(1);
 
-  console.log('invoiceDetails: ', invoice);
+  // console.log('invoiceDetails: ', invoice);
 
   if (!invoice) {
     notFound();
   }
 
   return (
-    <main className='max-w-5xl my-12 mx-auto border border-red-500'>
+    <main className='max-w-5xl my-12 mx-auto'>
       <div className='flex justify-between mb-8'>
-        <h1 className='flex items-center gap-4  text-3xl font-bold border border-red-500 text-left'>
+        <h1 className='flex items-center gap-4  text-3xl font-bold text-left'>
           Invoice {invoiceId}
           <Badge
             className={cn(
@@ -53,25 +53,25 @@ export default async function InvoicePage({
       <p className='text-lg mb-8'>{invoice.description}</p>
       <h2 className='font-bold text-lg mb-4'>Billing Details</h2>
       <ul className='grid gap-2'>
-        <li className=''>
+        <li className='flex'>
           <strong className='block w-28 flex-shrink-0 font-medium text-sm'>
             Invoice ID
           </strong>
           <span>{invoiceId}</span>
         </li>
-        <li className=''>
+        <li className='flex'>
           <strong className='block w-28 flex-shrink-0 font-medium text-sm'>
             Invoice Date
           </strong>
           <span>{new Date(invoice.createTS).toLocaleDateString('en-GB')}</span>
         </li>
-        <li className=''>
+        <li className='flex'>
           <strong className='block w-28 flex-shrink-0 font-medium text-sm'>
             Billing Name
           </strong>
           <span></span>
         </li>
-        <li className=''>
+        <li className='flex'>
           <strong className='block w-28 flex-shrink-0 font-medium text-sm'>
             Billing Email
           </strong>

@@ -21,12 +21,10 @@ export default async function Dashboard() {
   const invoiceData = await db.select().from(Invoices);
 
   return (
-    <main className='h-full border border-red-500'>
+    <main className='h-full'>
       <Container>
         <div className='flex justify-between'>
-          <h1 className='mb-6 text-3xl font-bold border border-red-500 text-left'>
-            Invoices
-          </h1>
+          <h1 className='mb-6 text-3xl font-bold text-left'>Invoices</h1>
           <p>
             <Button variant='ghost' className='inline-flex gap-2' asChild>
               <Link href='/invoices/new'>
@@ -53,7 +51,7 @@ export default async function Dashboard() {
                 <TableCell className='font-medium text-left p-0'>
                   <Link
                     href={`/invoices/${invoice.id}`}
-                    className='font-semibold p-4 block bg-blue-300'
+                    className='font-semibold p-4 block'
                   >
                     {new Date(invoice.createTS).toLocaleDateString('en-GB')}
                   </Link>
@@ -61,16 +59,13 @@ export default async function Dashboard() {
                 <TableCell className='text-left p-0'>
                   <Link
                     href={`/invoices/${invoice.id}`}
-                    className='font-semibold p-4 block bg-amber-300'
+                    className='font-semibold p-4 block'
                   >
                     D Trump
                   </Link>
                 </TableCell>
                 <TableCell className='text-left p-0'>
-                  <Link
-                    href={`/invoices/${invoice.id}`}
-                    className='p-4 block bg-red-300'
-                  >
+                  <Link href={`/invoices/${invoice.id}`} className='p-4 block'>
                     dtrump@gmail.com
                   </Link>
                 </TableCell>

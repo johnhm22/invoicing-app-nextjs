@@ -31,7 +31,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang='en'>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} bg-slate-300 min-h-screen grid grid-rows-[auto_1fr_auto] antialiased border border-blue-600`}
+          className={`${geistSans.variable} ${geistMono.variable} min-h-screen grid grid-rows-[auto_1fr_auto] antialiased`}
         >
           <Header />
           {children}
