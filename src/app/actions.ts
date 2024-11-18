@@ -2,9 +2,20 @@
 
 import { redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
+import { revalidatePath } from 'next/cache';
 
-import { Invoices } from '@/db/schema';
+import { Invoices, Status } from '@/db/schema';
 import { db } from '@/db';
+import { and, eq } from 'drizzle-orm';
+
+// const checkUserExists = async () => {
+//   const { userId, redirectToSignIn } = await auth();
+//   if (!userId) {
+//     return redirectToSignIn();
+//   } else {
+//     return userId;
+//   }
+// };
 
 export const createAction = async (formData: FormData) => {
   const { userId, redirectToSignIn } = await auth();
@@ -27,4 +38,42 @@ export const createAction = async (formData: FormData) => {
 
   result[0].id;
   redirect(`/invoices/${result[0].id}`);
+};
+
+type InvoiceTypes = 'void' | 'open' | 'paid' | 'uncollectable';
+
+export const updateStatusAction = async (formData: FormData) => {
+  const { userId, redirectToSignIn } = await auth();
+  if (!userId) {
+    return redirectToSignIn();
+  }
+
+  const invoiceId = formData.get('id') as string;
+  const status = formData.get('status') as Status;
+
+  const results = await db
+    .update(Invoices)
+    .set({ status })
+    .where(
+      and(eq(Invoices.id, parseInt(invoiceId)), eq(Invoices.userId, userId)),
+    );
+
+  revalidatePath(`/invoices/${invoiceId}`, 'page');
+};
+
+export const updateStatusActionClient = async (
+  invoiceId: number,
+  status: string,
+) => {
+  const { userId, redirectToSignIn } = await auth();
+  if (!userId) {
+    return redirectToSignIn();
+  }
+
+  const results = await db
+    .update(Invoices)
+    .set({ status })
+    .where(and(eq(Invoices.id, invoiceId), eq(Invoices.userId, userId)));
+
+  revalidatePath(`/invoices/${invoiceId}`, 'page');
 };
