@@ -7,14 +7,13 @@ import { db } from '@/db';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import Container from '@/components/Container';
+import ChangeStatus from '@/components/ChangeStatus';
 
 export default async function InvoicePage({
   params,
 }: {
   params: { invoiceId: string };
 }) {
-  // const invoiceData = await db.select().from(Invoices);
-
   const { userId } = await auth();
 
   const invoiceId = parseInt(params.invoiceId);
@@ -30,8 +29,6 @@ export default async function InvoicePage({
     .from(Invoices)
     .where(and(eq(Invoices.id, invoiceId), eq(Invoices.userId, userId)))
     .limit(1);
-
-  // console.log('invoiceDetails: ', invoice);
 
   if (!invoice) {
     notFound();
@@ -55,7 +52,7 @@ export default async function InvoicePage({
               {invoice.status}
             </Badge>
           </h1>
-          <p>Change Status</p>
+          <ChangeStatus invoiceId={invoiceId} />
         </div>
         <p className='text-3xl mb-3'>{(invoice.value / 100).toFixed(2)}</p>
         <p className='text-lg mb-8'>{invoice.description}</p>
