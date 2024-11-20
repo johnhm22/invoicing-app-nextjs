@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useOptimistic } from 'react';
+import React from 'react';
 import { ChevronDown } from 'lucide-react';
 
 import {
@@ -18,12 +18,8 @@ type ChangeStatusProps = {
 };
 
 const ChangeStatus = ({ invoiceId }: ChangeStatusProps) => {
-  const [optimisticStatus, setOptimisticStatus] = useOptimistic<string>('open');
-
   const handleClick = (invoiceId: number, status: string) => {
-    setOptimisticStatus(status);
-    // updateStatusActionClient(invoiceId, status);
-    updateStatusActionClient(invoiceId, optimisticStatus);
+    updateStatusActionClient(invoiceId, status);
   };
 
   return (
