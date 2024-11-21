@@ -1,8 +1,8 @@
 import { eq, and } from 'drizzle-orm';
-import { notFound } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
+import { notFound } from 'next/navigation';
 
-import { Invoices } from '@/db/schema';
+import { Invoices, Customers } from '@/db/schema';
 import { db } from '@/db';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -12,11 +12,11 @@ import ChangeStatus from '@/components/ChangeStatus';
 export default async function InvoicePage({
   params,
 }: {
-  params: { invoiceId: string };
+  params: Promise<{ invoiceId: string }>;
 }) {
   const { userId } = await auth();
 
-  const invoiceId = parseInt(params.invoiceId);
+  const invoiceId = parseInt((await params).invoiceId);
 
   if (isNaN(invoiceId)) {
     throw new Error('Invalid Invoice ID');
@@ -24,15 +24,21 @@ export default async function InvoicePage({
 
   if (!userId) return;
 
-  const [invoice] = await db
+  const [result] = await db
     .select()
     .from(Invoices)
+    .innerJoin(Customers, eq(Invoices.customerId, Customers.id))
     .where(and(eq(Invoices.id, invoiceId), eq(Invoices.userId, userId)))
     .limit(1);
 
-  if (!invoice) {
+  if (!result) {
     notFound();
   }
+
+  const invoice = {
+    ...result.invoices,
+    customer: result.customers,
+  };
 
   return (
     <main className='w-full border border-red-500'>
@@ -76,13 +82,13 @@ export default async function InvoicePage({
             <strong className='block w-28 flex-shrink-0 font-medium text-sm'>
               Billing Name
             </strong>
-            <span></span>
+            <span>{invoice.customer.name}</span>
           </li>
           <li className='flex'>
             <strong className='block w-28 flex-shrink-0 font-medium text-sm'>
               Billing Email
             </strong>
-            <span></span>
+            <span>{invoice.customer.email}</span>
           </li>
         </ul>
       </Container>

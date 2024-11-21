@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Container from '@/components/Container';
-import { Invoices } from '@/db/schema';
+import { Invoices, Customers } from '@/db/schema';
 import {
   Table,
   TableBody,
@@ -27,7 +27,12 @@ export default async function Dashboard() {
   const invoiceData = await db
     .select()
     .from(Invoices)
+    .innerJoin(Customers, eq(Invoices.customerId, Customers.id))
     .where(eq(Invoices.userId, userId));
+
+  const invoices = invoiceData.map(({ invoices, customers }) => {
+    return { ...invoices, customer: customers };
+  });
 
   return (
     <main className='h-full'>
@@ -55,7 +60,7 @@ export default async function Dashboard() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {invoiceData.map((invoice) => (
+            {invoices.map((invoice) => (
               <TableRow key={invoice.id}>
                 <TableCell className='font-medium text-left p-0'>
                   <Link
@@ -70,12 +75,12 @@ export default async function Dashboard() {
                     href={`/invoices/${invoice.id}`}
                     className='font-semibold p-4 block'
                   >
-                    D Trump
+                    {invoice.customer.name}
                   </Link>
                 </TableCell>
                 <TableCell className='text-left p-0'>
                   <Link href={`/invoices/${invoice.id}`} className='p-4 block'>
-                    dtrump@gmail.com
+                    {invoice.customer.email}
                   </Link>
                 </TableCell>
                 <TableCell className='text-center p-0'>
