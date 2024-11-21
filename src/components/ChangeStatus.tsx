@@ -25,12 +25,10 @@ const ChangeStatus = ({ invoiceId }: ChangeStatusProps) => {
   };
 
   const handleConfirmDeleteInvoice = () => {
-    console.log('deleteInvoice clicked');
     deleteInvoiceAction(invoiceId);
   };
 
   const handleClose = () => {
-    console.log('handleClose called');
     dialogRef.current!.close();
   };
 
