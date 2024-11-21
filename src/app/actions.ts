@@ -18,7 +18,7 @@ import { and, eq } from 'drizzle-orm';
 // };
 
 export const createAction = async (formData: FormData) => {
-  const { userId, redirectToSignIn } = await auth();
+  const { userId, redirectToSignIn, orgId } = await auth();
   if (!userId) {
     return redirectToSignIn();
   }
@@ -35,6 +35,7 @@ export const createAction = async (formData: FormData) => {
       name,
       email,
       userId,
+      organisationId: orgId || null,
     })
     .returning({ id: Customers.id });
 
@@ -46,6 +47,7 @@ export const createAction = async (formData: FormData) => {
       userId,
       customerId: customer.id,
       status: 'open',
+      organisationId: orgId || null,
     })
     .returning({ id: Invoices.id });
 
