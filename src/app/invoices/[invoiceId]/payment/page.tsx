@@ -1,13 +1,14 @@
 import { eq } from 'drizzle-orm';
 import { auth } from '@clerk/nextjs/server';
 import { notFound } from 'next/navigation';
+import { Check } from 'lucide-react';
 
 import { Invoices, Customers } from '@/db/schema';
 import { db } from '@/db';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import Container from '@/components/Container';
-import Payment from '@/components/Payment';
+import Payment from '@/components/CreditCard';
 
 export default async function InvoicePage({
   params,
@@ -70,7 +71,14 @@ export default async function InvoicePage({
             <p className='text-lg mb-8'>{invoice.description}</p>
           </div>
           <div className='border border-purple-600'>
-            <Payment />
+            <div className='font-bold mb-4 text-xl'>Manage Invoice</div>
+            {invoice.status === 'open' && <Payment />}
+            {invoice.status === 'paid' && (
+              <p className='text-xl font-bold flex gap-2 items-center'>
+                <Check className='h-auto w-5 rounded-full bg-green-500 text-white p-1' />{' '}
+                Invoice Paid
+              </p>
+            )}
           </div>
         </div>
 
