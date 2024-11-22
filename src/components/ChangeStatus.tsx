@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { ChevronDown, Ellipsis, Trash2 } from 'lucide-react';
+import { ChevronDown, Ellipsis, Trash2, CreditCard } from 'lucide-react';
 
 import {
   DropdownMenu,
@@ -12,6 +12,7 @@ import {
 import { Button } from './ui/button';
 import { AVAILABLE_STATUSES } from '@/data/invoice';
 import { updateStatusActionClient, deleteInvoiceAction } from '@/app/actions';
+import Link from 'next/link';
 
 type ChangeStatusProps = {
   invoiceId: number;
@@ -59,7 +60,7 @@ const ChangeStatus = ({ invoiceId }: ChangeStatusProps) => {
             <Ellipsis className='w-4 h-auto' />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className='flex flex-col'>
           <DropdownMenuItem>
             <button
               className='flex gap-2 items-center'
@@ -70,6 +71,15 @@ const ChangeStatus = ({ invoiceId }: ChangeStatusProps) => {
               <Trash2 className='w-4 h-auto' />
               Delete Invoice
             </button>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link
+              href={`/invoices/${invoiceId}/payment`}
+              className='flex gap-2 items-center'
+            >
+              <CreditCard className='w-4 h-auto' />
+              Pay Invoice
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
