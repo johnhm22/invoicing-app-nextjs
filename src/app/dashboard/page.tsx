@@ -1,7 +1,7 @@
 import { CirclePlus } from 'lucide-react';
 import Link from 'next/link';
 import { auth } from '@clerk/nextjs/server';
-import { eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -20,15 +20,24 @@ import { db } from '@/db';
 import { cn } from '@/lib/utils';
 
 export default async function Dashboard() {
-  const { userId } = await auth();
+  const { userId, orgId } = await auth();
 
   if (!userId) return;
 
-  const invoiceData = await db
-    .select()
-    .from(Invoices)
-    .innerJoin(Customers, eq(Invoices.customerId, Customers.id))
-    .where(eq(Invoices.userId, userId));
+  let invoiceData;
+  if (orgId) {
+    invoiceData = await db
+      .select()
+      .from(Invoices)
+      .innerJoin(Customers, eq(Invoices.customerId, Customers.id))
+      .where(eq(Invoices.organisationId, orgId));
+  } else {
+    invoiceData = await db
+      .select()
+      .from(Invoices)
+      .innerJoin(Customers, eq(Invoices.customerId, Customers.id))
+      .where(and(eq(Invoices.userId, userId), isNull(Invoices.organisationId)));
+  }
 
   const invoices = invoiceData.map(({ invoices, customers }) => {
     return { ...invoices, customer: customers };

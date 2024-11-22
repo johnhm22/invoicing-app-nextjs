@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 
 import { Customers, Invoices, Status } from '@/db/schema';
 import { db } from '@/db';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 
 // const checkUserExists = async () => {
 //   const { userId, redirectToSignIn } = await auth();
@@ -80,28 +80,63 @@ export const updateStatusActionClient = async (
   invoiceId: number,
   status: string,
 ) => {
-  const { userId, redirectToSignIn } = await auth();
+  const { userId, redirectToSignIn, orgId } = await auth();
   if (!userId) {
     return redirectToSignIn();
   }
 
-  await db
-    .update(Invoices)
-    .set({ status })
-    .where(and(eq(Invoices.id, invoiceId), eq(Invoices.userId, userId)));
-
+  if (orgId) {
+    await db
+      .update(Invoices)
+      .set({ status })
+      .where(
+        and(
+          eq(Invoices.id, invoiceId),
+          eq(Invoices.userId, userId),
+          eq(Invoices.organisationId, orgId),
+        ),
+      );
+  } else {
+    await db
+      .update(Invoices)
+      .set({ status })
+      .where(
+        and(
+          eq(Invoices.id, invoiceId),
+          eq(Invoices.userId, userId),
+          isNull(Invoices.organisationId),
+        ),
+      );
+  }
   revalidatePath(`/invoices/${invoiceId}`, 'page');
 };
 
 export const deleteInvoiceAction = async (invoiceId: number) => {
-  const { userId, redirectToSignIn } = await auth();
+  const { userId, redirectToSignIn, orgId } = await auth();
   if (!userId) {
     return redirectToSignIn();
   }
 
-  await db
-    .delete(Invoices)
-    .where(and(eq(Invoices.id, invoiceId), eq(Invoices.userId, userId)));
-
+  if (orgId) {
+    await db
+      .delete(Invoices)
+      .where(
+        and(
+          eq(Invoices.id, invoiceId),
+          eq(Invoices.userId, userId),
+          eq(Invoices.organisationId, orgId),
+        ),
+      );
+  } else {
+    await db
+      .delete(Invoices)
+      .where(
+        and(
+          eq(Invoices.id, invoiceId),
+          eq(Invoices.userId, userId),
+          isNull(Invoices.organisationId),
+        ),
+      );
+  }
   redirect(`/dashboard`);
 };
