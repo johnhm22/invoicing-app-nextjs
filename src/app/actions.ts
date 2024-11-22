@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
+import Stripe from 'stripe';
 
 import { Customers, Invoices, Status } from '@/db/schema';
 import { db } from '@/db';
@@ -16,6 +17,8 @@ import { and, eq, isNull } from 'drizzle-orm';
 //     return userId;
 //   }
 // };
+
+const stripe = new Stripe(process.env.STRIPE_API_SECRET as string);
 
 export const createAction = async (formData: FormData) => {
   const { userId, redirectToSignIn, orgId } = await auth();
