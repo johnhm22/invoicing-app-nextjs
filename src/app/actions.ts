@@ -5,10 +5,12 @@ import { auth } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
+import { Resend } from 'resend';
 
 import { Customers, Invoices, Status } from '@/db/schema';
 import { db } from '@/db';
 import { and, eq, isNull } from 'drizzle-orm';
+import { InvoiceCreatedEmail } from '@/emails/invoice-created';
 
 // const checkUserExists = async () => {
 //   const { userId, redirectToSignIn } = await auth();
@@ -20,6 +22,7 @@ import { and, eq, isNull } from 'drizzle-orm';
 // };
 
 const stripe = new Stripe(process.env.STRIPE_API_SECRET as string);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const createAction = async (formData: FormData) => {
   const { userId, redirectToSignIn, orgId } = await auth();
@@ -54,6 +57,13 @@ export const createAction = async (formData: FormData) => {
       organisationId: orgId || null,
     })
     .returning({ id: Invoices.id });
+
+  const { data, error } = await resend.emails.send({
+    from: 'John <onboarding@resend.dev>',
+    to: 'johnhmorgan@outlook.com',
+    subject: 'Here is your new invoice',
+    react: InvoiceCreatedEmail({ invoiceId: result[0].id }),
+  });
 
   result[0].id;
   redirect(`/invoices/${result[0].id}`);
@@ -176,3 +186,6 @@ export const createPayment = async (invoiceId: number) => {
   }
   redirect(session.url);
 };
+function EmailTemplate(arg0: { firstName: string }) {
+  throw new Error('Function not implemented.');
+}
