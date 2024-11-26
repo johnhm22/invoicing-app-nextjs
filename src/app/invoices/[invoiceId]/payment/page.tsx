@@ -2,23 +2,53 @@ import { eq } from 'drizzle-orm';
 import { auth } from '@clerk/nextjs/server';
 import { notFound } from 'next/navigation';
 import { Check } from 'lucide-react';
+import Stripe from 'stripe';
 
 import { Invoices, Customers } from '@/db/schema';
 import { db } from '@/db';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import Container from '@/components/Container';
-import Payment from '@/components/CreditCard';
+import Payment from '@/components/Payment';
+import { updateStatusActionClient } from '@/app/actions';
+
+type InvoicePageProps = {
+  params: Promise<{ invoiceId: string }>;
+  searchParams: Promise<{
+    status: 'success' | 'cancelled';
+    session_id: string;
+  }>;
+};
 
 export default async function InvoicePage({
   params,
-}: {
-  params: Promise<{ invoiceId: string }>;
-}) {
+  searchParams,
+}: InvoicePageProps) {
   const invoiceId = parseInt((await params).invoiceId);
+
+  const sessionId = (await searchParams).session_id;
+  const isSuccess = sessionId && (await searchParams).status === 'success';
+  const isCancelled = (await searchParams).status === 'cancelled';
+  let isError = isSuccess && !sessionId;
 
   if (isNaN(invoiceId)) {
     throw new Error('Invalid Invoice ID');
+  }
+
+  const stripe = new Stripe(process.env.STRIPE_API_SECRET!);
+
+  if (isSuccess) {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    console.log('session in invoice page', session);
+
+    if (session.payment_status != 'paid') {
+      isError === true;
+    } else {
+      updateStatusActionClient(invoiceId, 'paid');
+    }
+  } else if (isCancelled) {
+    updateStatusActionClient(invoiceId, 'open');
   }
 
   const [result] = await db
@@ -47,8 +77,18 @@ export default async function InvoicePage({
   };
 
   return (
-    <main className='w-full border border-red-500'>
+    <main className='w-full'>
       <Container>
+        {isError && (
+          <p className='text-sm bg-red-100 px-3 py-2 text-red-800 rounded-lg mb-6 text-center'>
+            Something went wrong, please try again
+          </p>
+        )}
+        {isCancelled && (
+          <p className='text-sm bg-yellow-100 px-3 py-2 text-yellow-800 rounded-lg mb-6 text-center'>
+            Payment process was cancelled, please try again
+          </p>
+        )}
         <div className='grid grid-cols-2'>
           <div>
             <div className='flex justify-between mb-8'>
@@ -70,9 +110,9 @@ export default async function InvoicePage({
             <p className='text-3xl mb-3'>{(invoice.value / 100).toFixed(2)}</p>
             <p className='text-lg mb-8'>{invoice.description}</p>
           </div>
-          <div className='border border-purple-600'>
+          <div className=''>
             <div className='font-bold mb-4 text-xl'>Manage Invoice</div>
-            {invoice.status === 'open' && <Payment />}
+            {invoice.status === 'open' && <Payment invoiceId={invoiceId} />}
             {invoice.status === 'paid' && (
               <p className='text-xl font-bold flex gap-2 items-center'>
                 <Check className='h-auto w-5 rounded-full bg-green-500 text-white p-1' />{' '}
