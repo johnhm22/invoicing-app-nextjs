@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
 import Stripe from 'stripe';
 
 import { Customers, Invoices, Status } from '@/db/schema';
@@ -142,4 +143,36 @@ export const deleteInvoiceAction = async (invoiceId: number) => {
       );
   }
   redirect(`/dashboard`);
+};
+
+export const createPayment = async (invoiceId: number) => {
+  const headersList = await headers();
+  const origin = headersList.get('origin');
+
+  const [result] = await db
+    .select({ status: Invoices.status, value: Invoices.value })
+    .from(Invoices)
+    .where(eq(Invoices.id, invoiceId));
+
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+        price_data: {
+          currency: 'gbp',
+          product: 'prod_RHZI5lUs4tRFlY',
+          unit_amount: result.value,
+        },
+        quantity: 1,
+      },
+    ],
+    mode: 'payment',
+    success_url: `${origin}/invoices/${invoiceId}/payment?status=success&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${origin}/invoices/${invoiceId}/payment?status=cancelled&session_id={CHECKOUT_SESSION_ID}`,
+  });
+
+  if (!session.url) {
+    throw new Error('Invalid payment session');
+  }
+  redirect(session.url);
 };
