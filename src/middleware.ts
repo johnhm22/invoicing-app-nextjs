@@ -5,6 +5,7 @@ const isPublic = createRouteMatcher([
   '/sign-in(.*)',
   '/sign-up(.*)',
   '/invoices/(.*)/payment',
+  '/api/webhooks/stripe',
 ]);
 
 // const isProtected = createRouteMatcher([
