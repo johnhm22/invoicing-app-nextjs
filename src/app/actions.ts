@@ -186,6 +186,3 @@ export const createPayment = async (invoiceId: number) => {
   }
   redirect(session.url);
 };
-function EmailTemplate(arg0: { firstName: string }) {
-  throw new Error('Function not implemented.');
-}
