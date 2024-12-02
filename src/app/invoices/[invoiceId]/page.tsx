@@ -1,6 +1,7 @@
 import { eq, and, isNull } from 'drizzle-orm';
 import { auth } from '@clerk/nextjs/server';
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
 
 import { Invoices, Customers } from '@/db/schema';
 import { db } from '@/db';
@@ -9,11 +10,20 @@ import { cn } from '@/lib/utils';
 import Container from '@/components/Container';
 import ChangeStatus from '@/components/ChangeStatus';
 
-export default async function InvoicePage({
-  params,
-}: {
+type InvoicePageProps = {
   params: Promise<{ invoiceId: string }>;
-}) {
+};
+
+export const generateMetadata = async ({
+  params,
+}: InvoicePageProps): Promise<Metadata> => {
+  return {
+    title: `Invoice ref. ${(await params).invoiceId}`,
+    description: 'Invoice details page',
+  };
+};
+
+export default async function InvoicePage({ params }: InvoicePageProps) {
   const { userId, orgId } = await auth();
 
   const invoiceId = parseInt((await params).invoiceId);
@@ -63,7 +73,7 @@ export default async function InvoicePage({
   };
 
   return (
-    <main className='w-full border border-red-500'>
+    <main className='w-full'>
       <Container>
         <div className='flex justify-between mb-8'>
           <h1 className='flex items-center gap-4 text-3xl font-bold text-left'>

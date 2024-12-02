@@ -1,5 +1,6 @@
 import { CirclePlus } from 'lucide-react';
 import Link from 'next/link';
+import { Metadata } from 'next';
 import { auth } from '@clerk/nextjs/server';
 import { and, eq, isNull } from 'drizzle-orm';
 
@@ -18,6 +19,11 @@ import {
 } from '@/components/ui/table';
 import { db } from '@/db';
 import { cn } from '@/lib/utils';
+
+export const metadata: Metadata = {
+  title: 'Invoice Dashboard',
+  description: 'Invoice World App',
+};
 
 export default async function Dashboard() {
   const { userId, orgId } = await auth();
