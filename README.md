@@ -19,7 +19,7 @@ There is also a payment option which, when selected, takes the user to a test mo
 * PostgreSQL  
 
 #### More details  
-[Clerk](https://clerk.com/) is defined as a user management platform. It is used here for its authentication and authorisation features. Multi-factor authentication is enabled on the configuration to require use when logging in of an authentictor app such as Google Authenticator.  
+[Clerk](https://clerk.com/) is defined as a user management platform. It is used here for its authentication and authorisation features. Multi-factor authentication is enabled on the configuration to require use of an authenticator app such as Google Authenticator when logging in.  
 
 [Stripe](https://stripe.com/gb/guides) is a well-used payment platform that can be integrated into apps and enables enterprises to receive and manage payments.  
 
