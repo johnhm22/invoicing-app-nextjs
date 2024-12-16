@@ -1,6 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Full Stack Invoicing App  
+An exercise in building a fullstack app using Next.js v15.
 
-## Getting Started
+### Tech Stack  
+tailwindcss
+TypeScript/JavaScript
+React v19
+Next.js v15
+Clerk
+Stripe
+Drizzle ORM
+PostgreSQL
+
+#### More details  
+[Clerk](https://clerk.com/) is defined as a user management platform. It is used here for its authentication and authorisation features. Multi-factor authentication is enabled on the configuration to require use by an authentictor app such as Google Authenticator or 
+
+
+### What does it do?  
+The user has to create an account and login. This is managed by Clerk.  
+Upon successful login, the dashboard view shows a table view of invoices with columns of date, customer name and email, status and value.  
+Each invoice is clickable and takes the user to a page for that specific invoice where more details are provided along with the possiblity to change the status or delete it.  
+There is also a payment option which, when selected, takes the user to a test mode Stripe payment page.  
+
+
+
+
 
 First, run the development server:
 
