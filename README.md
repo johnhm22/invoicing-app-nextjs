@@ -8,15 +8,15 @@ Each invoice is clickable and takes the user to a page for that specific invoice
 There is also a payment option which, when selected, takes the user to a test mode Stripe payment page.  
 
 ### Tech Stack  
-tailwindcss
-TypeScript/JavaScript
-React v19
-Next.js v15
-Clerk
-Stripe
-Resend
-Drizzle ORM
-PostgreSQL
+* tailwindcss  
+* TypeScript/JavaScript  
+* React v19  
+* Next.js v15  
+* Clerk  
+* Stripe  
+* Resend  
+* Drizzle ORM  
+* PostgreSQL  
 
 #### More details  
 [Clerk](https://clerk.com/) is defined as a user management platform. It is used here for its authentication and authorisation features. Multi-factor authentication is enabled on the configuration to require use by an authentictor app such as Google Authenticator.  
