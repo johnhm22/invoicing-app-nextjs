@@ -21,7 +21,7 @@ There is also a payment option which, when selected, takes the user to a test mo
 #### More details  
 [Clerk](https://clerk.com/) is defined as a user management platform. It is used here for its authentication and authorisation features. Multi-factor authentication is enabled on the configuration to require use when logging in of an authentictor app such as Google Authenticator.  
 
-[Stripe](https://stripe.com/gb/guides) is a well-used payment platform that can be integrated into apps and enables enterprises to take and manage payments.  
+[Stripe](https://stripe.com/gb/guides) is a well-used payment platform that can be integrated into apps and enables enterprises to receive and manage payments.  
 
 [Resend](https://resend.com/docs/introduction) is a useful email api for developers. It can be used, as in this example, to send an email to a customer with details of a newly created invoice.  
 
@@ -34,9 +34,9 @@ PostgreSQL is a well known relational database. For this app I used an online se
 * Sign up for an account with Clerk and follow the docs to configue your project  
 * Do similarly with Stripe and Resend. 
 * In your code editor, create a folder for the app project  
-* In the directory for the app in a terminal session, clone this repo and then run npm install  
+* In the directory for the app in a terminal session, clone this repo and then run _npm install_  
 * In the .env.local enter your env variables using the file .example.env as a template  
-* Once done, run npm run dev and open [http://localhost:3000](http://localhost:3000) in your browser to see the running invoice app.
+* Once done, run _npm run dev_ and open [http://localhost:3000](http://localhost:3000) in your browser to see the running invoice app.
 
 ### Credit  
 The app is based on one designed by the great [Colby Fayock](https://www.youtube.com/watch?v=Mcw8Mp8PYUE)  
