@@ -30,13 +30,13 @@ PostgreSQL
 PostgreSQL is a well known relational database. For this app I used an online serverless version from [Neon](https://neon.tech/) which was very straight forward to use.
 
 ### How to deploy and run  
-Set up your database either locally or with a provider such as Neon. The schema is shown in this repo.  
-Sign up for an account with Clerk and follow the docs to configue your project  
-Do similarly with Clerk and Resend. 
-In your code editor, create a folder for the app project  
-In the directory for the app in a terminal session, clone this repo and then run npm install  
-In the .env.local enter your env variables using the file .example.env as a template  
-Once done, run npm run dev and open [http://localhost:3000](http://localhost:3000) in your browser to see the running invoice app.
+* Set up your database either locally or with a provider such as Neon. The schema is shown in this repo.  
+* Sign up for an account with Clerk and follow the docs to configue your project  
+* Do similarly with Clerk and Resend. 
+* In your code editor, create a folder for the app project  
+* In the directory for the app in a terminal session, clone this repo and then run npm install  
+* In the .env.local enter your env variables using the file .example.env as a template  
+* Once done, run npm run dev and open [http://localhost:3000](http://localhost:3000) in your browser to see the running invoice app.
 
 ### Credit  
 The app is based on one designed by the great [Colby Fayock](https://www.youtube.com/watch?v=Mcw8Mp8PYUE)  
