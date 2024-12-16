@@ -32,7 +32,7 @@ PostgreSQL is a well known relational database. For this app I used an online se
 ### How to deploy and run  
 * Set up your database either locally or with a provider such as Neon. The schema is shown in this repo.  
 * Sign up for an account with Clerk and follow the docs to configue your project  
-* Do similarly with Clerk and Resend. 
+* Do similarly with Stripe and Resend. 
 * In your code editor, create a folder for the app project  
 * In the directory for the app in a terminal session, clone this repo and then run npm install  
 * In the .env.local enter your env variables using the file .example.env as a template  
